@@ -1,0 +1,30 @@
+{
+  "name": "bookshelf",
+  "type": "module",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "pm2:start": "pm2 start ecosystem.config.js",
+    "pm2:stop": "pm2 stop ecosystem.config.js",
+    "pm2:restart": "pm2 restart ecosystem.config.js",
+    "fmt": "biome format --write",
+    "lint": "biome lint --write"
+  },
+  "dependencies": {
+    "@astrojs/node": "9.5.2",
+    "astro": "5.16.0",
+    "pm2": "6.0.14"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.1.2",
+    "typescript": "5.9.3"
+  },
+  "engines": {
+    "node": ">=24",
+    "npm": ">=10"
+  }
+}

@@ -1,0 +1,163 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Toolbar from '../components/Toolbar.astro';
+import Footer from '../components/Footer.astro';
+import { config } from '../config';
+
+const bookCountText = config.ui.labels.bookCount.replace('{count}', '<span id="book-count">0</span>');
+---
+
+<Layout title={config.site.name}>
+  <Toolbar />
+  <main class="container">
+    <div class="alert-info">
+      {config.ui.alertMessage}
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="search-year">{config.ui.labels.year}</label>
+        <input type="number" id="search-year" min="2010" placeholder="" />
+      </div>
+      <div class="form-group">
+        <label for="search-title">{config.ui.labels.title}</label>
+        <input type="text" id="search-title" placeholder="" />
+      </div>
+      <div class="form-group">
+        <label for="select-genre">{config.ui.labels.genre}</label>
+        <select id="select-genre">
+          <option value="">{config.ui.labels.genreAll}</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="book-count" set:html={bookCountText} />
+
+    <div class="book-grid" id="book-grid">
+      <!-- Books will be loaded here -->
+    </div>
+
+    <button class="btn btn-more" id="load-more" style="display: none;">
+      {config.ui.labels.loadMore}
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M7 10l5 5 5-5z"/>
+      </svg>
+    </button>
+  </main>
+  <div class="divider"></div>
+  <Footer />
+</Layout>
+
+<script define:vars={{ config }}>
+  window.__CONFIG__ = config;
+</script>
+
+<script>
+  import type { IBook } from '../types/book';
+
+  const config = (window as any).__CONFIG__;
+  const PER_PAGE = config.pagination.perPage;
+  let books: IBook[] = [];
+  let filteredBooks: IBook[] = [];
+  let currentPage = 1;
+  let genres: string[] = [];
+
+  const bookGrid = document.getElementById('book-grid');
+  const bookCount = document.getElementById('book-count');
+  const loadMore = document.getElementById('load-more') as HTMLButtonElement;
+  const searchYear = document.getElementById('search-year') as HTMLInputElement;
+  const searchTitle = document.getElementById('search-title') as HTMLInputElement;
+  const selectGenre = document.getElementById('select-genre') as HTMLSelectElement;
+
+  async function loadBooks() {
+    try {
+      const response = await fetch(config.data.booksPath);
+      books = await response.json();
+
+      genres = [...new Set(books.map(b => b.genre))].sort((a, b) => b.localeCompare(a));
+      genres.forEach(genre => {
+        const option = document.createElement('option');
+        option.value = genre;
+        option.textContent = genre;
+        selectGenre.appendChild(option);
+      });
+
+      filterAndRender();
+    } catch (error) {
+      console.error('Failed to load books:', error);
+    }
+  }
+
+  function getBookImage(book: IBook): string {
+    if (book.imageUrl) return book.imageUrl;
+    if (book.asin) return config.amazon.imageUrlTemplate.replace('{asin}', book.asin);
+    return '';
+  }
+
+  function getProductUrl(book: IBook): string {
+    if (book.productUrl) return book.productUrl;
+    if (book.asin) return config.amazon.productUrlTemplate.replace('{asin}', book.asin);
+    return '#';
+  }
+
+  function filterBooks(): IBook[] {
+    let result = [...books];
+
+    const year = searchYear.value;
+    const title = searchTitle.value.toLowerCase();
+    const genre = selectGenre.value;
+
+    if (year) {
+      result = result.filter(book => {
+        const bookYear = new Date(book.readAt).getFullYear().toString();
+        return bookYear === year;
+      });
+    }
+
+    if (title) {
+      result = result.filter(book => book.title.toLowerCase().includes(title));
+    }
+
+    if (genre) {
+      result = result.filter(book => book.genre === genre);
+    }
+
+    return result;
+  }
+
+  function renderBooks() {
+    if (!bookGrid) return;
+
+    const booksToShow = filteredBooks.slice(0, currentPage * PER_PAGE);
+    bookGrid.innerHTML = booksToShow.map(book => `
+      <a href="${getProductUrl(book)}" target="_blank" rel="noopener" class="book-item" title="${book.title}">
+        <img src="${getBookImage(book)}" alt="${book.title}" loading="lazy" />
+      </a>
+    `).join('');
+
+    if (bookCount) {
+      bookCount.textContent = filteredBooks.length.toString();
+    }
+
+    if (loadMore) {
+      loadMore.style.display = currentPage * PER_PAGE < filteredBooks.length ? 'inline-flex' : 'none';
+    }
+  }
+
+  function filterAndRender() {
+    currentPage = 1;
+    filteredBooks = filterBooks();
+    renderBooks();
+  }
+
+  searchYear.addEventListener('input', filterAndRender);
+  searchTitle.addEventListener('input', filterAndRender);
+  selectGenre.addEventListener('change', filterAndRender);
+
+  loadMore.addEventListener('click', () => {
+    currentPage++;
+    renderBooks();
+  });
+
+  loadBooks();
+</script>

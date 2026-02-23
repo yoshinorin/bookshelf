@@ -1,0 +1,30 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Toolbar from '../components/Toolbar.astro';
+import Footer from '../components/Footer.astro';
+import { config } from '../config';
+
+const { title, sections } = config.pages.privacyPolicy;
+---
+
+<Layout title={`${title} - ${config.site.name}`}>
+  <Toolbar />
+  <main class="container">
+    <div class="content-wrapper static-page">
+      {sections.map((section, index) => (
+        <section class={index > 0 ? 'section-margin' : ''}>
+          <h2>{section.heading}</h2>
+          <p>{section.content}</p>
+        </section>
+      ))}
+    </div>
+  </main>
+  <div class="divider"></div>
+  <Footer />
+</Layout>
+
+<style>
+  .section-margin {
+    margin-top: 30px;
+  }
+</style>

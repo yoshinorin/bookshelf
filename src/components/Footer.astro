@@ -1,0 +1,10 @@
+---
+import { config } from '../config';
+
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <p>&copy; {config.footer.copyrightStartYear} - {currentYear} {config.site.author}</p>
+  <p>{config.footer.poweredBy}</p>
+</footer>
