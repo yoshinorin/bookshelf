@@ -1,7 +1,6 @@
 ---
 name: commit-message
 description: Use this skill when the user asks to "suggest a commit message", "generate a commit message", "think of a commit message", or wants to check git diff and come up with a commit message in English.
-version: 1.0.0
 ---
 
 # Commit Message Generator
