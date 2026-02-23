@@ -1,5 +1,7 @@
 # Bookshelf
 
+[![CI](https://github.com/yoshinorin/bookshelf/actions/workflows/ci.yml/badge.svg)](https://github.com/yoshinorin/bookshelf/actions/workflows/ci.yml)
+
 A website to display a list of books.
 
 ## Architecture
