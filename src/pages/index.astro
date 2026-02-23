@@ -16,17 +16,16 @@ const bookCountText = config.ui.labels.bookCount.replace('{count}', '<span id="b
 
     <div class="form-row">
       <div class="form-group">
-        <label for="search-year">{config.ui.labels.year}</label>
-        <input type="number" id="search-year" min="2010" placeholder="" />
+        <select id="select-year" aria-label={config.ui.labels.year}>
+          <option value="">{config.ui.labels.year}</option>
+        </select>
       </div>
       <div class="form-group">
-        <label for="search-title">{config.ui.labels.title}</label>
-        <input type="text" id="search-title" placeholder="" />
+        <input type="text" id="search-title" placeholder={config.ui.labels.title} aria-label={config.ui.labels.title} />
       </div>
       <div class="form-group">
-        <label for="select-genre">{config.ui.labels.genre}</label>
-        <select id="select-genre">
-          <option value="">{config.ui.labels.genreAll}</option>
+        <select id="select-genre" aria-label={config.ui.labels.genre}>
+          <option value="">{config.ui.labels.genre}</option>
         </select>
       </div>
     </div>
@@ -65,7 +64,7 @@ const bookCountText = config.ui.labels.bookCount.replace('{count}', '<span id="b
   const bookGrid = document.getElementById('book-grid');
   const bookCount = document.getElementById('book-count');
   const loadMore = document.getElementById('load-more') as HTMLButtonElement;
-  const searchYear = document.getElementById('search-year') as HTMLInputElement;
+  const selectYear = document.getElementById('select-year') as HTMLSelectElement;
   const searchTitle = document.getElementById('search-title') as HTMLInputElement;
   const selectGenre = document.getElementById('select-genre') as HTMLSelectElement;
 
@@ -73,6 +72,14 @@ const bookCountText = config.ui.labels.bookCount.replace('{count}', '<span id="b
     try {
       const response = await fetch(config.data.booksPath);
       books = await response.json();
+
+      const years = [...new Set(books.map(b => new Date(b.readAt).getFullYear()))].sort((a, b) => b - a);
+      years.forEach(year => {
+        const option = document.createElement('option');
+        option.value = year.toString();
+        option.textContent = year.toString();
+        selectYear.appendChild(option);
+      });
 
       genres = [...new Set(books.map(b => b.genre))].sort((a, b) => b.localeCompare(a));
       genres.forEach(genre => {
@@ -103,7 +110,7 @@ const bookCountText = config.ui.labels.bookCount.replace('{count}', '<span id="b
   function filterBooks(): IBook[] {
     let result = [...books];
 
-    const year = searchYear.value;
+    const year = selectYear.value;
     const title = searchTitle.value.toLowerCase();
     const genre = selectGenre.value;
 
@@ -157,9 +164,16 @@ const bookCountText = config.ui.labels.bookCount.replace('{count}', '<span id="b
     renderBooks();
   }
 
-  searchYear.addEventListener('input', filterAndRender);
+  function updateSelectStyle(el: HTMLSelectElement) {
+    el.classList.toggle('placeholder', el.value === '');
+  }
+
+  selectYear.addEventListener('change', () => { updateSelectStyle(selectYear); filterAndRender(); });
   searchTitle.addEventListener('input', filterAndRender);
-  selectGenre.addEventListener('change', filterAndRender);
+  selectGenre.addEventListener('change', () => { updateSelectStyle(selectGenre); filterAndRender(); });
+
+  updateSelectStyle(selectYear);
+  updateSelectStyle(selectGenre);
 
   loadMore.addEventListener('click', () => {
     currentPage++;

@@ -115,23 +115,17 @@ p {
   min-width: 140px;
 }
 
-.form-group label {
-  display: block;
-  font-size: 0.75rem;
-  color: var(--color-secondary);
-  margin-bottom: 4px;
-}
 
 .form-group input,
 .form-group select {
   width: 100%;
-  padding: 8px 12px;
+  padding: 8px 4px;
   font-size: 1rem;
   font-family: inherit;
-  border: 1px solid #ccc;
-  border-bottom: 2px solid var(--color-secondary);
-  border-radius: 4px 4px 0 0;
-  background: var(--color-white);
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #ccc;
+  border-radius: 0;
   transition: border-color 0.2s;
 }
 
@@ -139,6 +133,18 @@ p {
 .form-group select:focus {
   outline: none;
   border-bottom-color: var(--color-primary);
+}
+
+.form-group input::placeholder {
+  color: #bbb;
+}
+
+.form-group select.placeholder {
+  color: #bbb;
+}
+
+.form-group select:not(.placeholder) {
+  color: var(--color-text);
 }
 
 /* Book Grid */
