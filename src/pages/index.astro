@@ -125,15 +125,22 @@ const bookCountText = config.ui.labels.bookCount.replace('{count}', '<span id="b
     return result;
   }
 
-  function renderBooks() {
+  function renderBooks(append = false) {
     if (!bookGrid) return;
 
-    const booksToShow = filteredBooks.slice(0, currentPage * PER_PAGE);
-    bookGrid.innerHTML = booksToShow.map(book => `
-      <a href="${getProductUrl(book)}" target="_blank" rel="noopener" class="book-item" title="${book.title}">
+    const start = append ? (currentPage - 1) * PER_PAGE : 0;
+    const booksToShow = filteredBooks.slice(start, currentPage * PER_PAGE);
+    const html = booksToShow.map((book, i) => `
+      <a href="${getProductUrl(book)}" target="_blank" rel="noopener" class="book-item" title="${book.title}" style="animation-delay: ${Math.min(i * 0.04, 0.6)}s">
         <img src="${getBookImage(book)}" alt="${book.title}" loading="lazy" />
       </a>
     `).join('');
+
+    if (append) {
+      bookGrid.insertAdjacentHTML('beforeend', html);
+    } else {
+      bookGrid.innerHTML = html;
+    }
 
     if (bookCount) {
       bookCount.textContent = filteredBooks.length.toString();
@@ -156,7 +163,7 @@ const bookCountText = config.ui.labels.bookCount.replace('{count}', '<span id="b
 
   loadMore.addEventListener('click', () => {
     currentPage++;
-    renderBooks();
+    renderBooks(true);
   });
 
   loadBooks();
