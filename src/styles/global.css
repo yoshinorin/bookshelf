@@ -313,8 +313,9 @@ p {
 .footer {
   padding: 2.5rem 0.9375rem;
   text-align: center;
-  color: var(--color-secondary);
+  background-color: #eff0f3;
   font-size: 0.875rem;
+  border-top: 1px solid var(--border);
 }
 
 .footer p {
