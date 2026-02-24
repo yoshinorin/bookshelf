@@ -154,7 +154,7 @@ const bookCountText = config.ui.labels.bookCount.replace('{count}', '<span id="b
     }
 
     if (loadMore) {
-      loadMore.style.display = currentPage * PER_PAGE < filteredBooks.length ? 'inline-flex' : 'none';
+      loadMore.style.display = currentPage * PER_PAGE < filteredBooks.length ? 'block' : 'none';
     }
   }
 

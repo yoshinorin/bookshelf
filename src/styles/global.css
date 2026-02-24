@@ -117,7 +117,7 @@ p {
 }
 
 .form-group {
-  flex: 1;
+  flex: 0 0 12.5rem;
   min-width: 8.75rem;
 }
 
@@ -234,6 +234,8 @@ p {
 
 .btn-more {
   margin-top: 2.25rem;
+  display: block;
+  width: fit-content;
 }
 
 /* Toolbar */
