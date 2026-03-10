@@ -117,10 +117,9 @@ p {
 }
 
 .form-group {
-  flex: 0 0 12.5rem;
+  flex: 0 0 1rem;
   min-width: 8.75rem;
 }
-
 
 .form-group input,
 .form-group select {
