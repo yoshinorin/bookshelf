@@ -12,6 +12,9 @@ dist/
 # Config (copy config.example.ts to src/config.ts)
 src/config.ts
 
+# PM2
+ecosystem.config.cjs
+
 # IDE
 .vscode/
 .idea/

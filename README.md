@@ -51,12 +51,13 @@ $ PORT=3000 node dist/server/entry.mjs
 
 ### Run (pm2)
 
-Start the server as a pm2 managed process using the `ecosystem.config.js` configuration:
+Copy `ecosystem.config.example.cjs` to `ecosystem.config.cjs`, then start the server as a pm2 managed process:
 
 ```sh
-$ npm run pm2:start      # Start (pm2 start ecosystem.config.js)
-$ npm run pm2:stop       # Stop  (pm2 stop ecosystem.config.js)
-$ npm run pm2:restart    # Restart (pm2 restart ecosystem.config.js)
+$ cp ecosystem.config.example.cjs ecosystem.config.cjs
+$ npm run pm2:start      # Start (pm2 start ecosystem.config.cjs)
+$ npm run pm2:stop       # Stop  (pm2 stop ecosystem.config.cjs)
+$ npm run pm2:restart    # Restart (pm2 restart ecosystem.config.cjs)
 ```
 
 ### Environment Variables
@@ -122,9 +123,10 @@ Place your book data in `data/books.json`. The file should contain an array of b
 ## Directory Structure
 
 ```
-├── config.example.ts   # Configuration template
+├── config.example.ts            # Configuration template
+├── ecosystem.config.example.cjs # PM2 configuration template
 ├── data/
-│   └── books.json      # Book data (not committed)
+│   └── books.json               # Book data (not committed)
 └── src/
     ├── config.ts       # Site configuration (not committed)
     ├── components/     # Reusable components
