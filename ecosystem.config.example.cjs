@@ -2,5 +2,8 @@ module.exports = {
   apps: [{
     name: 'bookshelf',
     script: 'dist/server/entry.mjs',
+    env: {
+      PORT: 4321
+    }
   }],
 };
