@@ -165,7 +165,7 @@ const bookCountText = config.ui.labels.bookCount.replace('{count}', '<span id="b
     const booksToShow = filteredBooks.slice(start, currentPage * PER_PAGE);
     const html = booksToShow.map((book, i) => `
       <a href="${getProductUrl(book)}" target="_blank" rel="noopener" class="book-item" title="${book.title}" style="animation-delay: ${Math.min(i * 0.04, 0.6)}s">
-        <img src="${getBookImage(book)}" alt="${book.title}" loading="lazy" />
+        <div class="book-image-wrapper"><img src="${getBookImage(book)}" alt="${book.title}" loading="lazy" /></div>
         ${showMeta ? `<div class="book-meta">
           <div class="book-meta-title">${book.title}</div>
           ${book.publisher ? `<div class="book-meta-publisher">${book.publisher}</div>` : ''}
