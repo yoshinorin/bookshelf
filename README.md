@@ -82,7 +82,7 @@ cp config.example.ts src/config.ts
 | `pagination` | Items per page |
 | `data` | Path to books.json API |
 | `amazon` | Image/product URL templates |
-| `ui` | Alert message, form labels, menu button text |
+| `ui` | Alert message, form labels (year, title, genre, publisher), menu button text |
 | `menu` | Navigation menu items (label, href, external) |
 | `pages` | Page content (about, privacyPolicy) |
 
@@ -97,6 +97,7 @@ Place your book data in `data/books.json`. The file should contain an array of b
     "isbn13": "9781234567890",
     "title": "Example Book Title",
     "genre": "Programming",
+    "publisher": "Example Publisher",
     "readAt": 1704067200000,
     "imageUrl": "https://example.com/cover.jpg",
     "productUrl": "https://example.com/book"
@@ -116,6 +117,7 @@ Place your book data in `data/books.json`. The file should contain an array of b
 | `isbn13` | string | No | ISBN-13 |
 | `title` | string | Yes | Book title |
 | `genre` | string | Yes | Genre for filtering |
+| `publisher` | string | No | Publisher name for filtering |
 | `readAt` | number | Yes | Read date as Unix timestamp (milliseconds) |
 | `imageUrl` | string | No | Custom cover image URL |
 | `productUrl` | string | No | Custom product page URL |

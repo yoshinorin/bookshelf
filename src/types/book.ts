@@ -4,6 +4,7 @@ export interface IBook {
   isbn13?: string;
   title: string;
   genre: string;
+  publisher?: string;
   readAt: number;
   imageUrl?: string;
   productUrl?: string;

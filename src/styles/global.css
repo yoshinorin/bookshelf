@@ -121,6 +121,11 @@ p {
   min-width: 8.75rem;
 }
 
+.form-group--auto {
+  flex: 0 0 auto;
+  min-width: 8.75rem;
+}
+
 .form-group input,
 .form-group select {
   width: 100%;

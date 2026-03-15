@@ -28,6 +28,11 @@ const bookCountText = config.ui.labels.bookCount.replace('{count}', '<span id="b
           <option value="">{config.ui.labels.genre}</option>
         </select>
       </div>
+      <div class="form-group form-group--auto">
+        <select id="select-publisher" aria-label={config.ui.labels.publisher}>
+          <option value="">{config.ui.labels.publisher}</option>
+        </select>
+      </div>
     </div>
 
     <div class="book-count" set:html={bookCountText} />
@@ -67,6 +72,7 @@ const bookCountText = config.ui.labels.bookCount.replace('{count}', '<span id="b
   const selectYear = document.getElementById('select-year') as HTMLSelectElement;
   const searchTitle = document.getElementById('search-title') as HTMLInputElement;
   const selectGenre = document.getElementById('select-genre') as HTMLSelectElement;
+  const selectPublisher = document.getElementById('select-publisher') as HTMLSelectElement;
 
   async function loadBooks() {
     try {
@@ -89,6 +95,14 @@ const bookCountText = config.ui.labels.bookCount.replace('{count}', '<span id="b
         selectGenre.appendChild(option);
       });
 
+      const publishers = [...new Set(books.map(b => b.publisher).filter((p): p is string => !!p))].sort((a, b) => a.localeCompare(b));
+      publishers.forEach(publisher => {
+        const option = document.createElement('option');
+        option.value = publisher;
+        option.textContent = publisher;
+        selectPublisher.appendChild(option);
+      });
+
       filterAndRender();
     } catch (error) {
       console.error('Failed to load books:', error);
@@ -97,6 +111,7 @@ const bookCountText = config.ui.labels.bookCount.replace('{count}', '<span id="b
 
   function getBookImage(book: IBook): string {
     if (book.imageUrl) return book.imageUrl;
+    if (book.isbn13 && book.isbn13 !== '-') return `/images/${book.isbn13}.jpg`;
     if (book.asin) return config.amazon.imageUrlTemplate.replace('{asin}', book.asin);
     return '';
   }
@@ -113,6 +128,7 @@ const bookCountText = config.ui.labels.bookCount.replace('{count}', '<span id="b
     const year = selectYear.value;
     const title = searchTitle.value.toLowerCase();
     const genre = selectGenre.value;
+    const publisher = selectPublisher.value;
 
     if (year) {
       result = result.filter(book => {
@@ -127,6 +143,10 @@ const bookCountText = config.ui.labels.bookCount.replace('{count}', '<span id="b
 
     if (genre) {
       result = result.filter(book => book.genre === genre);
+    }
+
+    if (publisher) {
+      result = result.filter(book => book.publisher === publisher);
     }
 
     return result;
@@ -168,12 +188,27 @@ const bookCountText = config.ui.labels.bookCount.replace('{count}', '<span id="b
     el.classList.toggle('placeholder', el.value === '');
   }
 
+  function fitSelectToContent(el: HTMLSelectElement) {
+    if (!el.value) {
+      el.style.width = '';
+      return;
+    }
+    const span = document.createElement('span');
+    span.style.cssText = `font:${getComputedStyle(el).font};visibility:hidden;position:absolute;white-space:nowrap`;
+    span.textContent = el.options[el.selectedIndex]?.text ?? '';
+    document.body.appendChild(span);
+    el.style.width = `${span.offsetWidth + 24}px`;
+    document.body.removeChild(span);
+  }
+
   selectYear.addEventListener('change', () => { updateSelectStyle(selectYear); filterAndRender(); });
   searchTitle.addEventListener('input', filterAndRender);
   selectGenre.addEventListener('change', () => { updateSelectStyle(selectGenre); filterAndRender(); });
+  selectPublisher.addEventListener('change', () => { updateSelectStyle(selectPublisher); fitSelectToContent(selectPublisher); filterAndRender(); });
 
   updateSelectStyle(selectYear);
   updateSelectStyle(selectGenre);
+  updateSelectStyle(selectPublisher);
 
   loadMore.addEventListener('click', () => {
     currentPage++;
