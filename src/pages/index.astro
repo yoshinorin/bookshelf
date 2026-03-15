@@ -33,8 +33,17 @@ const bookCountText = config.ui.labels.bookCount.replace('{count}', '<span id="b
           <option value="">{config.ui.labels.publisher}</option>
         </select>
       </div>
+      <div class="form-group form-group--auto">
+        <select id="select-rate" aria-label={config.ui.labels.rate}>
+          <option value="">{config.ui.labels.rate}</option>
+          {[0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5].map(r => (
+            <option value={r}>★ {r}</option>
+          ))}
+        </select>
+      </div>
       <div class="form-group form-group--auto form-group--meta-toggle">
         <button class="meta-toggle-button" id="meta-toggle" aria-pressed="false">{config.ui.labels.metaToggle}</button>
+        <button class="meta-toggle-button" id="rate-toggle" aria-pressed="false">{config.ui.labels.rateToggle}</button>
       </div>
     </div>
 
@@ -71,6 +80,7 @@ const bookCountText = config.ui.labels.bookCount.replace('{count}', '<span id="b
   let currentPage = 1;
   let genres: string[] = [];
   let showMeta = localStorage.getItem('showBookMeta') === 'true';
+  let showRate = localStorage.getItem('showBookRate') === 'true';
 
   const bookGrid = document.getElementById('book-grid');
   const bookCount = document.getElementById('book-count');
@@ -79,6 +89,7 @@ const bookCountText = config.ui.labels.bookCount.replace('{count}', '<span id="b
   const searchTitle = document.getElementById('search-title') as HTMLInputElement;
   const selectGenre = document.getElementById('select-genre') as HTMLSelectElement;
   const selectPublisher = document.getElementById('select-publisher') as HTMLSelectElement;
+  const selectRate = document.getElementById('select-rate') as HTMLSelectElement;
 
   async function loadBooks() {
     try {
@@ -122,6 +133,14 @@ const bookCountText = config.ui.labels.bookCount.replace('{count}', '<span id="b
     return '';
   }
 
+  function renderStars(rate: number): string {
+    const pct = (rate / 5) * 100;
+    return `<div class="star-rating" aria-label="${rate} / 5">
+      <div class="stars-empty">★★★★★</div>
+      <div class="stars-filled" style="width:${pct}%">★★★★★</div>
+    </div>`;
+  }
+
   function getProductUrl(book: IBook): string {
     if (book.productUrl) return book.productUrl;
     if (book.asin) return config.amazon.productUrlTemplate.replace('{asin}', book.asin);
@@ -135,6 +154,7 @@ const bookCountText = config.ui.labels.bookCount.replace('{count}', '<span id="b
     const title = searchTitle.value.toLowerCase();
     const genre = selectGenre.value;
     const publisher = selectPublisher.value;
+    const rate = selectRate.value ? parseFloat(selectRate.value) : null;
 
     if (year) {
       result = result.filter(book => {
@@ -155,6 +175,10 @@ const bookCountText = config.ui.labels.bookCount.replace('{count}', '<span id="b
       result = result.filter(book => book.publisher === publisher);
     }
 
+    if (rate !== null) {
+      result = result.filter(book => book.rate === rate);
+    }
+
     return result;
   }
 
@@ -166,9 +190,10 @@ const bookCountText = config.ui.labels.bookCount.replace('{count}', '<span id="b
     const html = booksToShow.map((book, i) => `
       <a href="${getProductUrl(book)}" target="_blank" rel="noopener" class="book-item" title="${book.title}" style="animation-delay: ${Math.min(i * 0.04, 0.6)}s">
         <div class="book-image-wrapper"><img src="${getBookImage(book)}" alt="${book.title}" loading="lazy" /></div>
-        ${showMeta ? `<div class="book-meta">
-          <div class="book-meta-title">${book.title}</div>
-          ${book.publisher ? `<div class="book-meta-publisher">${book.publisher}</div>` : ''}
+        ${showMeta || showRate ? `<div class="book-meta">
+          ${showMeta ? `<div class="book-meta-title">${book.title}</div>` : ''}
+          ${showMeta && book.publisher ? `<div class="book-meta-publisher">${book.publisher}</div>` : ''}
+          ${showRate && book.rate != null ? renderStars(book.rate) : ''}
         </div>` : ''}
       </a>
     `).join('');
@@ -215,10 +240,12 @@ const bookCountText = config.ui.labels.bookCount.replace('{count}', '<span id="b
   searchTitle.addEventListener('input', filterAndRender);
   selectGenre.addEventListener('change', () => { updateSelectStyle(selectGenre); filterAndRender(); });
   selectPublisher.addEventListener('change', () => { updateSelectStyle(selectPublisher); fitSelectToContent(selectPublisher); filterAndRender(); });
+  selectRate.addEventListener('change', () => { updateSelectStyle(selectRate); filterAndRender(); });
 
   updateSelectStyle(selectYear);
   updateSelectStyle(selectGenre);
   updateSelectStyle(selectPublisher);
+  updateSelectStyle(selectRate);
 
   const metaToggle = document.getElementById('meta-toggle') as HTMLButtonElement;
   metaToggle.setAttribute('aria-pressed', String(showMeta));
@@ -229,6 +256,18 @@ const bookCountText = config.ui.labels.bookCount.replace('{count}', '<span id="b
     localStorage.setItem('showBookMeta', String(showMeta));
     metaToggle.setAttribute('aria-pressed', String(showMeta));
     metaToggle.classList.toggle('active', showMeta);
+    filterAndRender();
+  });
+
+  const rateToggle = document.getElementById('rate-toggle') as HTMLButtonElement;
+  rateToggle.setAttribute('aria-pressed', String(showRate));
+  if (showRate) rateToggle.classList.add('active');
+
+  rateToggle.addEventListener('click', () => {
+    showRate = !showRate;
+    localStorage.setItem('showBookRate', String(showRate));
+    rateToggle.setAttribute('aria-pressed', String(showRate));
+    rateToggle.classList.toggle('active', showRate);
     filterAndRender();
   });
 

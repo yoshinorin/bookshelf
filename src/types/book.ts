@@ -8,4 +8,5 @@ export interface IBook {
   readAt: number;
   imageUrl?: string;
   productUrl?: string;
+  rate?: number;
 }

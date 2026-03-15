@@ -135,8 +135,8 @@ p {
 .form-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 1.25rem;
-  margin-bottom: 0.75rem;
+  column-gap: 1.25rem;
+  row-gap: 0.25rem;
 }
 
 .form-group {
@@ -240,7 +240,7 @@ p {
 
 /* Count Display */
 .book-count {
-  text-align: left;
+  text-align: right;
 }
 
 /* Button */
@@ -391,6 +391,29 @@ p {
   overflow: hidden;
   text-overflow: ellipsis;
   margin-top: 0.125rem;
+}
+
+.star-rating {
+  position: relative;
+  display: inline-block;
+  font-size: 0.75rem;
+  line-height: 1;
+  margin-top: 0.25rem;
+}
+
+.stars-empty {
+  color: #ddd;
+  letter-spacing: 0.05em;
+}
+
+.stars-filled {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  color: #f5a623;
+  letter-spacing: 0.05em;
 }
 
 .toolbar-divider {

@@ -29,6 +29,8 @@ export const config = {
       bookCount: 'Total: {count} books',
       loadMore: 'Load more',
       metaToggle: 'Details',
+      rateToggle: 'Rate',
+      rate: 'Rate',
     },
     menuButton: 'Menu',
   },
