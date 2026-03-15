@@ -28,6 +28,7 @@ export const config = {
       genreAll: 'All',
       bookCount: 'Total: {count} books',
       loadMore: 'Load more',
+      metaToggle: 'Details',
     },
     menuButton: 'Menu',
   },

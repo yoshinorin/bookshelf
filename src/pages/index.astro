@@ -33,6 +33,9 @@ const bookCountText = config.ui.labels.bookCount.replace('{count}', '<span id="b
           <option value="">{config.ui.labels.publisher}</option>
         </select>
       </div>
+      <div class="form-group form-group--auto form-group--meta-toggle">
+        <button class="meta-toggle-button" id="meta-toggle" aria-pressed="false">{config.ui.labels.metaToggle}</button>
+      </div>
     </div>
 
     <div class="book-count" set:html={bookCountText} />
@@ -67,6 +70,7 @@ const bookCountText = config.ui.labels.bookCount.replace('{count}', '<span id="b
   let filteredBooks: IBook[] = [];
   let currentPage = 1;
   let genres: string[] = [];
+  let showMeta = localStorage.getItem('showBookMeta') === 'true';
 
   const bookGrid = document.getElementById('book-grid');
   const bookCount = document.getElementById('book-count');
@@ -162,6 +166,10 @@ const bookCountText = config.ui.labels.bookCount.replace('{count}', '<span id="b
     const html = booksToShow.map((book, i) => `
       <a href="${getProductUrl(book)}" target="_blank" rel="noopener" class="book-item" title="${book.title}" style="animation-delay: ${Math.min(i * 0.04, 0.6)}s">
         <img src="${getBookImage(book)}" alt="${book.title}" loading="lazy" />
+        ${showMeta ? `<div class="book-meta">
+          <div class="book-meta-title">${book.title}</div>
+          ${book.publisher ? `<div class="book-meta-publisher">${book.publisher}</div>` : ''}
+        </div>` : ''}
       </a>
     `).join('');
 
@@ -211,6 +219,18 @@ const bookCountText = config.ui.labels.bookCount.replace('{count}', '<span id="b
   updateSelectStyle(selectYear);
   updateSelectStyle(selectGenre);
   updateSelectStyle(selectPublisher);
+
+  const metaToggle = document.getElementById('meta-toggle') as HTMLButtonElement;
+  metaToggle.setAttribute('aria-pressed', String(showMeta));
+  if (showMeta) metaToggle.classList.add('active');
+
+  metaToggle.addEventListener('click', () => {
+    showMeta = !showMeta;
+    localStorage.setItem('showBookMeta', String(showMeta));
+    metaToggle.setAttribute('aria-pressed', String(showMeta));
+    metaToggle.classList.toggle('active', showMeta);
+    filterAndRender();
+  });
 
   loadMore.addEventListener('click', () => {
     currentPage++;
