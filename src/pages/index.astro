@@ -9,7 +9,7 @@ const bookCountText = config.ui.labels.bookCount.replace('{count}', '<span id="b
 
 <Layout title={config.site.name}>
   <Toolbar />
-  <main class="container">
+  <div class="sticky-filter">
     <div class="alert-info">
       {config.ui.alertMessage}
     </div>
@@ -36,7 +36,9 @@ const bookCountText = config.ui.labels.bookCount.replace('{count}', '<span id="b
     </div>
 
     <div class="book-count" set:html={bookCountText} />
+  </div>
 
+  <main class="container">
     <div class="book-grid" id="book-grid">
       <!-- Books will be loaded here -->
     </div>
@@ -214,6 +216,11 @@ const bookCountText = config.ui.labels.bookCount.replace('{count}', '<span id="b
     currentPage++;
     renderBooks(true);
   });
+
+  const alertInfo = document.querySelector('.alert-info') as HTMLElement;
+  window.addEventListener('scroll', () => {
+    alertInfo.classList.toggle('alert-hidden', window.scrollY > 0);
+  }, { passive: true });
 
   loadBooks();
 </script>
