@@ -113,7 +113,7 @@ const bookCountText = config.ui.labels.bookCount.replace('{count}', '<span id="b
 
   function getBookImage(book: IBook): string {
     if (book.imageUrl) return book.imageUrl;
-    if (book.isbn13 && book.isbn13 !== '-') return `/images/${book.isbn13}.jpg`;
+    // if (book.isbn13 && book.isbn13 !== '-') return `/images/${book.isbn13}.jpg`;
     if (book.asin) return config.amazon.imageUrlTemplate.replace('{asin}', book.asin);
     return '';
   }
