@@ -24,6 +24,7 @@ export const config = {
       year: 'Year',
       title: 'Title',
       genre: 'Genre',
+      publisher: 'Publisher',
       genreAll: 'All',
       bookCount: 'Total: {count} books',
       loadMore: 'Load more',
