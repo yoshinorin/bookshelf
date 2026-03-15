@@ -15,8 +15,8 @@
     "lint": "biome lint --write"
   },
   "dependencies": {
-    "@astrojs/node": "9.5.2",
-    "astro": "5.16.0",
+    "@astrojs/node": "10.0.1",
+    "astro": "6.0.4",
     "pm2": "6.0.14"
   },
   "devDependencies": {
