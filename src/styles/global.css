@@ -75,7 +75,7 @@ p {
 .container {
   max-width: 68.75rem;
   margin: 0 auto;
-  padding: 1.5rem 1.25rem 3.75rem;
+  padding: 1rem 1.25rem 2.75rem;
 }
 
 .content-wrapper {
@@ -93,7 +93,7 @@ p {
   color: var(--color-text);
   font-size: 0.82rem;
   text-align: left;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
   font-style: italic;
   line-height: 1.7;
   display: flex;
@@ -123,12 +123,12 @@ p {
 /* Sticky Filter */
 .sticky-filter {
   position: sticky;
-  top: 3rem;
+  top: 2.5rem;
   z-index: 10;
   background: var(--color-background);
   max-width: 68.75rem;
   margin: 0 auto;
-  padding: 1rem 1.25rem 0;
+  padding: 0.3rem 1.25rem 0.75rem;
 }
 
 /* Form Elements */
@@ -136,7 +136,7 @@ p {
   display: flex;
   flex-wrap: wrap;
   gap: 1.25rem;
-  margin-bottom: 1.25rem;
+  margin-bottom: 0.75rem;
 }
 
 .form-group {
@@ -236,7 +236,6 @@ p {
 /* Count Display */
 .book-count {
   text-align: left;
-  margin-bottom: 1.25rem;
 }
 
 /* Button */
@@ -274,7 +273,7 @@ p {
   justify-content: space-between;
   align-items: center;
   padding: 0 1.5rem;
-  height: 3rem;
+  height: 2.5rem;
   background: rgba(249, 249, 249, 0.9);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
